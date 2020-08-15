@@ -5,14 +5,18 @@
 
 name: Build Newifi 3
 
-on: 
-  #release:
-  #  types: [published]
-  #push:
-    #branches: 
-      #- master
-  #schedule:
-    #- cron: 0 20 * * *
+on:
+  repository_dispatch:
+    types: newifi3
+  release:
+    types: published
+  push:
+    branches:
+      - master
+    paths:
+      - '.config'
+  schedule:
+    - cron: 0 8 * * 5
   watch:
     types: started
     
