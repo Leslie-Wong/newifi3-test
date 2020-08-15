@@ -6,13 +6,13 @@
 name: Build Newifi 3
 
 on: 
-  release:
-    types: [published]
-  push:
-    branches: 
-      - master
-  schedule:
-    - cron: 0 20 * * *
+  #release:
+  #  types: [published]
+  #push:
+    #branches: 
+      #- master
+  #schedule:
+    #- cron: 0 20 * * *
   watch:
     types: started
     
