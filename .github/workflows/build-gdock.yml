@@ -20,6 +20,9 @@ on:
   watch:
     types: started
     
+env:
+  DIY_P1_SH: diy-part1.sh
+  
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -62,6 +65,13 @@ jobs:
         echo '开启魔法上网'
         cd lede
         sed -i 's/#src-git/src-git/g' feeds.conf.default
+        
+    - name: Load custom feeds
+      run: |
+        [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
+        chmod +x $DIY_P1_SH
+        cd openwrt
+        ../$DIY_P1_SH
 
     - name: Update feeds
       run: cd lede && ./scripts/feeds update -a
