@@ -3,7 +3,7 @@
 #   Author: JK
 #=================================================
 
-name: Build R6220
+name: Build R6220_B
 
 on:
   repository_dispatch:
@@ -108,5 +108,5 @@ jobs:
     - name : Upload artifact
       uses: actions/upload-artifact@master
       with:
-        name: R6220_A
+        name: R6220_B
         path: ./lede/bin
