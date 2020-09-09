@@ -80,10 +80,6 @@ jobs:
     - name: Install feeds
       run: cd lede && ./scripts/feeds install -a
             
-    - name: Setting zerotier
-      run: |
-        cp -rf zerotier/settings.lua ./lede/package/lean/luci-app-zerotier/luasrc/model/cbi/zerotier/settings.lua
-
     - name: Load custom configuration
       run: |
         cp -f r6220_20200909.config ./lede/.config
@@ -97,6 +93,10 @@ jobs:
       run: |
         echo -e "$(nproc) thread build."
         cd lede && make download -j$(nproc)
+    
+    - name: Setting zerotier
+      run: |
+        cp -rf zerotier/settings.lua ./lede/package/lean/luci-app-zerotier/luasrc/model/cbi/zerotier/settings.lua
 
     - name: Build
       run: |
