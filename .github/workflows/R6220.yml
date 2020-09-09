@@ -7,7 +7,7 @@ name: Build R6220
 
 on:
   repository_dispatch:
-    types: newifi3
+    types: R6220
   release:
     types: published
   push:
@@ -108,5 +108,5 @@ jobs:
     - name : Upload artifact
       uses: actions/upload-artifact@master
       with:
-        name: Newifi 3
+        name: R6220
         path: ./lede/bin
