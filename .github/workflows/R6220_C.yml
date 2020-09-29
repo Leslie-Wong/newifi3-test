@@ -82,7 +82,7 @@ jobs:
             
     - name: Load custom configuration
       run: |
-        cp -f r6220_C.config ./lede/.config
+        cp -f r6220_c.config ./lede/.config
         #cp -f gdockfull128.config ./lede/.config
         chmod +x diy.sh
         cd lede
