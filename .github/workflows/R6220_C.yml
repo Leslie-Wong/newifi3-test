@@ -1,0 +1,112 @@
+#=================================================
+#   Description: Newifi 3 FROM LEAN'S LEDE
+#   Author: JK
+#=================================================
+
+name: Build R6220_C
+
+on:
+  repository_dispatch:
+    types: R6220_C
+  release:
+    types: published
+  push:
+    branches:
+      - master
+    paths:
+      - '.config'
+  schedule:
+    - cron: 0 8 * * 5
+  watch:
+    types: started
+    
+env:
+  FEEDS_CONF: feeds.conf.default
+  DIY_P1_SH: diy-part1.sh
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        docker rmi `docker images -q`
+        echo "Deleting files, please wait ..."
+        sudo rm -rf \
+          /usr/share/dotnet \
+          /etc/mysql \
+          /etc/php
+        sudo -E apt-get -y purge \
+          azure-cli \
+          ghc* \
+          zulu* \
+          hhvm \
+          llvm* \
+          firefox \
+          google* \
+          dotnet* \
+          powershell \
+          openjdk* \
+          mysql* \
+          php*
+        sudo -E apt-get update
+        sudo -E apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler u-boot-tools gcc-multilib g++-multilib
+        sudo -E apt-get -y autoremove --purge
+        sudo -E apt-get clean
+
+    - name: Clone source code
+      run: |
+        git clone https://github.com/coolsnowwolf/lede lede
+        echo '开启魔法上网'
+        cd lede
+        sed -i 's/#src-git/src-git/g' feeds.conf.default
+        
+    - name: Load custom feeds
+      run: |
+        [ -e $FEEDS_CONF ] && mv $FEEDS_CONF lede/feeds.conf.default
+        chmod +x $DIY_P1_SH
+        cd lede
+        ../$DIY_P1_SH
+
+    - name: Update feeds
+      run: cd lede && ./scripts/feeds update -a
+
+    - name: Install feeds
+      run: cd lede && ./scripts/feeds install -a
+            
+    - name: Load custom configuration
+      run: |
+        cp -f r6220_C.config ./lede/.config
+        #cp -f gdockfull128.config ./lede/.config
+        chmod +x diy.sh
+        cd lede
+        ../diy.sh
+        make defconfig
+
+    - name: Download package
+      run: |
+        echo -e "$(nproc) thread build."
+        cd lede && make download -j$(nproc)
+    
+    - name: Add Custom Settings
+      run: |
+        cp -rf settings/* ./lede/
+
+    - name: Build
+      run: |
+        cd lede
+        echo -e "$(nproc) thread build."
+        make -j$(nproc) V=s
+        rm -rf ./bin/targets/ipq40xx/generic/packages
+
+    - name : Upload artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: R6220_C
+        path: ./lede/bin
