@@ -14,4 +14,4 @@
 # Lienol/openwrt-package
 #sed -i '$a src-git lienol https://github.com/Lancenas/lienol-openwrt-package.git' feeds.conf.default
 sed -i '$a src-git lienol https://github.com/xiaorouji/openwrt-package.git' feeds.conf.default
-sed -i '$a src-git luci-app-adguardhome https://github.com/rufengsuixing/luci-app-adguardhome' feeds.conf.default
+#sed -i '$a src-git luci-app-adguardhome https://github.com/rufengsuixing/luci-app-adguardhome' feeds.conf.default
