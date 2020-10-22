@@ -92,7 +92,7 @@ jobs:
     - name: Download package
       run: |
         echo -e "$(nproc) thread build."
-        cd lede && make download -j$(nproc)
+        cd lede && make download -j8
     
     - name: Add Custom Settings
       run: |
@@ -102,7 +102,7 @@ jobs:
       run: |
         cd lede
         echo -e "$(nproc) thread build."
-        make -j$(nproc) V=s
+        make -j1 V=s
         rm -rf ./bin/targets/ipq40xx/generic/packages
 
     - name : Upload artifact
