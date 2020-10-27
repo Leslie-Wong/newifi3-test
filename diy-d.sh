@@ -22,7 +22,7 @@ sed -i 's/OpenWrt/newifi3/g' package/kernel/mac80211/files/lib/wifi/mac80211.sh
 
 echo '修改banner'
 rm -rf package/base-files/files/etc/banner
-cp -f ../../banner package/base-files/files/etc/
+cp -f $GITHUB_WORKSPACE/banner package/base-files/files/etc/
 
 #echo '下载ServerChan'
 #git clone https://github.com/tty228/luci-app-serverchan ../diy/luci-app-serverchan
